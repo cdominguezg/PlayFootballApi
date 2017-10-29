@@ -3,26 +3,27 @@ var express = require('express');
 //Creamos el objeto para definir las rutas
 var router = express.Router();
 //Importamos el modelo que ejecutará las sentencias SQL
-var usuariosModel = require('../models/users');
-//Coger todos los usuarios
-router.get('/usuarios', function(request, response) {
+var usersModel = require('../models/users');
+//Coger todos los users
+router.get('/user', function(request, response) {
 
-usuariosModel.getUsuarios(function(error, data)
+usersModel.getUsers(function(error, data)
 {
 response.status(200).json(data);
 });
 });
-//Coger usuario por id
-router.get('/usuario', function(request, response) {
+//Coger user por id
+router.get('/user/:id', function(request, response) {
 
-var id = request.query.id;
-usuariosModel.getUsuarioById(id,function(error, datos)
+var id = request.params.id;
+console.log(id);
+usersModel.getUserById(id,function(error, datos)
 {
 
 
-    if (typeof data !== 'undefined' && datos.length > 0)
+    if (typeof datos !== 'undefined' && datos.length > 0)
     {
-      response.status(200).json(datos);
+      response.status(200).json(datos[0]);
     }
     else
     {
@@ -31,22 +32,23 @@ usuariosModel.getUsuarioById(id,function(error, datos)
   });
 });
 
-//Insertar usuario
+//Insertar user
 /*
 Ejemplo de uso:
 en el Body:
 {
-"nombre": "Usuario de Prueba"
+"nombre": "user de Prueba"
 }
 
 
 */
-router.post('/usuario', function(request, response) {
-var datosUsuario = {
-id : null,
-nombre : request.body.nombre
+router.post('/user', function(request, response) {
+var datosuser = {
+username : request.body.username,
+email: request.body.email,
+profile_image: request.body.profile_image
 };
-usuariosModel.insertUsuario(datosUsuario,function(error, datos)
+usersModel.insertUser(datosuser,function(error, datos)
 {
 if(datos)
 {
@@ -60,18 +62,18 @@ response.status(500).json({"Mensaje":"Error"});
 });
 
 
-//Modificar un usuario
-router.put('/usuario', function(request, response) {
+//Modificar un user
+router.put('/user/:id', function(request, response) {
 
-var datosUsuario = {
-id:request.query.id,
-nombre : request.query.nombre
-};
+  var datosuser = {
+  username : request.body.username,
+  email: request.body.email,
+  };
 
 
-usuariosModel.updateUsuario(datosUsuario,function(error, datos)
+usersModel.updateUser(datosuser,function(error, datos)
 {
-  //si el usuario se ha actualizado correctamente mostramos un mensaje
+  //si el user se ha actualizado correctamente mostramos un mensaje
   if(datos && datos.mensaje)
   {
     response.status(200).json(datos);
@@ -84,13 +86,13 @@ usuariosModel.updateUsuario(datosUsuario,function(error, datos)
 });
 
 });
-//Borrar un usuario
+//Borrar un user
 
 
-router.delete('/usuario', function(request, response) {
+router.delete('/user/:id', function(request, response) {
 
-var id = request.query.id;
-usuariosModel.deleteUsuario(id,function(error, datos)
+var id = request.params.id;
+usersModel.deleteUser(id,function(error, datos)
 {
 if(datos && datos.mensaje === "Borrado")
 {

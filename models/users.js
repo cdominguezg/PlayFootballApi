@@ -29,12 +29,17 @@ users.getUsers = function(callback){
 
 //Get user by id
 users.getUserById = function(id,callback){
+  console.log("SELECT * FROM user WHERE EMAIL='"+id+"'");
   if(connection){
-    connection.query("SELECT * FROM user WHERE USERNAME='"+id+"' OR EMAIL='"+id+"'", function(error,rows){
+    connection.query("SELECT * FROM user WHERE email='"+id+"'", function(error,rows){
       if(error){
         throw error;
       }
       else{
+
+        var jsonString={};
+        jsonString.stuff=rows;
+        console.log(jsonString)
         callback(null, rows);
       }
     });
@@ -48,7 +53,7 @@ users.insertUser = function(userData,callback){
         throw error;
       }
       else{
-        callback(null, result.insertId);
+        callback(null, userData.email);
       }
     });
   }
@@ -56,7 +61,7 @@ users.insertUser = function(userData,callback){
 
 users.deleteUser = function(id,callback){
   if(connection){
-    connection.query("DELETE FROM user WHERE USERNAME='"+id+"' OR EMAIL='"+id+"'", function(error,result){
+    connection.query("DELETE FROM user EMAIL='"+id+"'", function(error,result){
       if(error){
         throw error;
       }

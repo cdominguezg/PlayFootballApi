@@ -1,4 +1,4 @@
-var conn = require("connection");
+var conn = require("./connection");
 var mysql = require("mysql");
 
 var connection = mysql.createConnection(conn);
@@ -19,11 +19,12 @@ comments.getComments = function(callback){
 
 comments.getCommentsByReceiver = function(id,callback){
   if(connection){
-    connection.query("SELECT * FROM comment WHERE receiver='"+id+"'",(error,rows){
+    connection.query("SELECT t2.username as 'sender',content, t2.profile_image FROM `comment`INNER JOIN user t2 ON sender=t2.email WHERE receiver='"+id+"'",function(error,rows){
       if(error){
         throw error;
       }
       else{
+        console.log(rows);
         callback(null, rows);
       }
     });
@@ -32,7 +33,7 @@ comments.getCommentsByReceiver = function(id,callback){
 
 comments.getCommentsBySender = function(id,callback){
   if(connection){
-    connection.query("SELECT * FROM comment WHERE sender='"+id+"'",(error,rows){
+    connection.query("SELECT * FROM comment WHERE sender='"+id+"'",function(error,rows){
       if(error){
         throw error;
       }
@@ -58,7 +59,7 @@ comments.insertComment = function(commentData,callback){
 
 comments.deleteComment = function(id,callback){
   if(connection){
-    connection.query("DELETE FROM comment WHERE id_comment='"+id+"'",(error,rows){
+    connection.query("DELETE FROM comment WHERE id_comment='"+id+"'",function(error,rows){
       if(error){
         throw error;
       }

@@ -61,6 +61,19 @@ events.deleteEvent = function(id,callback){
   }
 }
 
+events.getEventByOrganizator = function(id, callback){
+  if(connection){
+    connection.query("SELECT * FROM event INNER JOIN user on organizator=email INNER JOIN places on places.id_place=event.id_place WHERE organizator='"+id+"'", function(error, rows){
+      if(error){
+        throw error;
+      }
+      else{
+        callback(null,rows);
+      }
+    })
+  }
+}
+
 module.exports = events;
 
 //TODO: implement updateEvent method

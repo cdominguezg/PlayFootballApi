@@ -30,6 +30,19 @@ valorations.getValorationsByReceiver = function(id,callback){
       }
     })
   }
+
+  valorations.insertValoration=function(valorationData, callback){
+    if(connection){
+      connection.quert("INSERT INTO valoration SET ?",valorationData, function(error,result){
+        if(error){
+          throw error;
+        }
+        else{
+          callback(null, result.insertId);
+        }
+      });
+    }
+  }
 }
 
 module.exports = valorations;

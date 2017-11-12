@@ -11,6 +11,18 @@ router.get("/events", function(request,response){
   });
 });
 
+router.get("/events/organizator/:id", function(request, response){
+  var id = request.params.id;
+  eventModel.getEventByOrganizator(id, function(request, data){
+    if(data !== 'undefined' && data.length>0){
+      response.status(200).json(data);
+    }
+    else{
+      response.status(404).json({"Mensaje":"No existe"});
+    }
+  });
+});
+
 router.get("/events/:id", function(request, response){
   var id = request.params.id;
   eventModel.getEventById(id,function(request,data){
@@ -39,4 +51,5 @@ router.post("/events", function(request, response){
       response.status(500).json({"Mensaje":"Error en la insercion"});
   });
 });
+
 module.exports = router;
